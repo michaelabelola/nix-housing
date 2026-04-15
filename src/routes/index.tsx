@@ -1,87 +1,124 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
+import ListingCard from '../components/ListingCard'
+import { bookingHistory, listings } from '../data/siteData'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  component: HomePage,
+})
 
-function App() {
+function HomePage() {
+  const featuredListings = listings.filter((listing) => listing.trending).slice(0, 3)
+  const quickStats = [
+    ['Trending now', `${featuredListings.length} live picks`],
+    ['Countries', '6 payment regions'],
+    ['Property types', 'Homes / rooms / land'],
+    ['Bookings tracked', `${bookingHistory.length} recent records`],
+  ]
+
   return (
-    <main className="page-wrap px-4 pb-8 pt-14">
-      <section className="island-shell rise-in relative overflow-hidden rounded-[2rem] px-6 py-10 sm:px-10 sm:py-14">
-        <div className="pointer-events-none absolute -left-20 -top-24 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(79,184,178,0.32),transparent_66%)]" />
-        <div className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(47,106,74,0.18),transparent_66%)]" />
-        <p className="island-kicker mb-3">TanStack Start Base Template</p>
-        <h1 className="display-title mb-5 max-w-3xl text-4xl leading-[1.02] font-bold tracking-tight text-[var(--sea-ink)] sm:text-6xl">
-          Start simple, ship quickly.
-        </h1>
-        <p className="mb-8 max-w-2xl text-base text-[var(--sea-ink-soft)] sm:text-lg">
-          This base starter intentionally keeps things light: two routes, clean
-          structure, and the essentials you need to build from scratch.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href="/about"
-            className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
-          >
-            About This Starter
-          </a>
-          <a
-            href="https://tanstack.com/router"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-[rgba(23,58,64,0.2)] bg-white/50 px-5 py-2.5 text-sm font-semibold text-[var(--sea-ink)] no-underline transition hover:-translate-y-0.5 hover:border-[rgba(23,58,64,0.35)]"
-          >
-            Router Guide
-          </a>
+    <div className="page-shell page-stack px-4">
+      <section className="hero-grid">
+        <div className="stack-lg">
+          <p className="section-label">Real estate, kept spare</p>
+          <h1 className="display-title">
+            Search.
+            <br />
+            Inspect.
+            <br />
+            Book.
+          </h1>
+          <p className="lead-text">
+            Axis Estate helps users query properties, rooms, and land with small,
+            focused screens. You see only the next decision: filter listings, open
+            a detail view, set your housing needs, then pay using methods supported
+            in your country.
+          </p>
+          <div className="hero-actions">
+            <Link to="/explore" className="button-primary">
+              Explore listings
+            </Link>
+            <Link to="/bookings" className="button-secondary">
+              View booking history
+            </Link>
+          </div>
+        </div>
+
+        <div className="panel stack-md">
+          <p className="section-label">Trending quick overview</p>
+          {featuredListings.map((listing) => (
+            <div key={listing.id} className="metric-box">
+              <strong>{listing.title}</strong>
+              <p className="muted-text">{listing.highlight}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          [
-            'Type-Safe Routing',
-            'Routes and links stay in sync across every page.',
-          ],
-          [
-            'Server Functions',
-            'Call server code from your UI without creating API boilerplate.',
-          ],
-          [
-            'Streaming by Default',
-            'Ship progressively rendered responses for faster experiences.',
-          ],
-          [
-            'Tailwind Native',
-            'Design quickly with utility-first styling and reusable tokens.',
-          ],
-        ].map(([title, desc], index) => (
-          <article
-            key={title}
-            className="island-shell feature-card rise-in rounded-2xl p-5"
-            style={{ animationDelay: `${index * 90 + 80}ms` }}
-          >
-            <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
-              {title}
-            </h2>
-            <p className="m-0 text-sm text-[var(--sea-ink-soft)]">{desc}</p>
+      <section className="stat-grid">
+        {quickStats.map(([label, value]) => (
+          <article key={label} className="panel stack-sm">
+            <p className="stat-value">{value}</p>
+            <p className="stat-label">{label}</p>
           </article>
         ))}
       </section>
 
-      <section className="island-shell mt-8 rounded-2xl p-6">
-        <p className="island-kicker mb-2">Quick Start</p>
-        <ul className="m-0 list-disc space-y-2 pl-5 text-sm text-[var(--sea-ink-soft)]">
-          <li>
-            Edit <code>src/routes/index.tsx</code> to customize the home page.
-          </li>
-          <li>
-            Update <code>src/components/Header.tsx</code> and{' '}
-            <code>src/components/Footer.tsx</code> for brand links.
-          </li>
-          <li>
-            Add routes in <code>src/routes</code> and tweak visual tokens in{' '}
-            <code>src/styles.css</code>.
-          </li>
-        </ul>
+      <section className="page-stack" style={{ gap: '1.5rem' }}>
+        <div className="stack-sm">
+          <p className="section-label">Selected listings</p>
+          <h2 className="section-title">Three quiet options to start with</h2>
+          <p className="lead-text">
+            The first screen stays short on purpose. If one of these fits, open the
+            detail page. If not, the explore page gives full filtering.
+          </p>
+        </div>
+        <div className="listing-grid">
+          {featuredListings.map((listing) => (
+            <ListingCard key={listing.id} listing={listing} />
+          ))}
+        </div>
       </section>
-    </main>
+
+      <section className="split-grid">
+        <div className="panel stack-md">
+          <p className="section-label">Payments</p>
+          <h2 className="section-title">Country-based support</h2>
+          <p className="muted-text">
+            Payment methods adjust by country so users only see relevant choices:
+            Apple Pay, Google Pay, credit card, or cash on arrival.
+          </p>
+          <div className="button-row">
+            <Link to="/payment-methods" className="button-primary">
+              Manage payment methods
+            </Link>
+            <Link
+              to="/payment/$listingId"
+              params={{ listingId: featuredListings[0]!.id }}
+              search={{ country: 'United States', people: 2, stay: '6 months' }}
+              className="button-secondary"
+            >
+              Open payment page
+            </Link>
+          </div>
+        </div>
+
+        <div className="panel stack-md">
+          <p className="section-label">Accounts</p>
+          <h2 className="section-title">Fast entry points</h2>
+          <p className="muted-text">
+            New users can create an account before booking. Returning users can sign
+            in and reopen their saved booking history.
+          </p>
+          <div className="button-row">
+            <Link to="/sign-up" className="button-primary">
+              Create account
+            </Link>
+            <Link to="/sign-in" className="button-secondary">
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }
