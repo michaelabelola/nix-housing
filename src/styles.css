@@ -11,7 +11,7 @@
   --background: #ffffff;
   --foreground: #000000;
   --muted: rgba(0, 0, 0, 0.66);
-  --line: rgba(0, 0, 0, 0.18);
+  --line: rgb(0, 0, 0);
   --line-strong: rgba(0, 0, 0, 0.9);
   --panel: #ffffff;
   --panel-alt: rgba(0, 0, 0, 0.04);
