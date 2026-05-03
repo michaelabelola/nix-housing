@@ -8,9 +8,9 @@ export const Route = createFileRoute('/')({
     component: HomePage,
 })
 const nixFetch = new NixFetch({
-    entityID: "",
-    appID: "",
-    apiKey: "",
+    entityID: "a",
+    appID: "s",
+    apiKey: "d",
     baseURL: "http://api.localhost:8000",
 })
 export const nixRequest = new RealEstateInstance({nixFetch})

@@ -48,6 +48,14 @@ export class NixFetch {
 
     constructor(config: NixFetchConfig) {
         this.config = config;
+        this.initialize()
+    }
+
+    private initialize() {
+        if (!this.config.apiKey) console.error("API key is required for NixFetch")
+        if (!this.config.appID) console.error("App ID is required for NixFetch")
+        if (!this.config.entityID) console.error("Entity ID is required for NixFetch")
+        if (!this.config.baseURL) console.error("Base URL is required for NixFetch")
     }
 
     fetch = <T, E = FetchError>(input: FetchInput, initMain?: FetchInitParams) => {
