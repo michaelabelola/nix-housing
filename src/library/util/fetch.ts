@@ -43,6 +43,44 @@ interface RequestPromise<T, E = FetchError> extends Promise<T> {
     catch<TResult = never>(onrejected?: ((reason: E) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
 }
 
+function processResponse<T>(
+    resolve: Parameters<ConstructorParameters<typeof Promise>[0]>[0] | any,
+    reject: Parameters<ConstructorParameters<typeof Promise>[0]>[1]
+) {
+
+    return async (resp: Response) => {
+        const internalFields = {
+            status: resp.status,
+            statusText: resp.statusText,
+            headers: resp.headers,
+            redirected: resp.redirected,
+        }
+        if (!resp.ok) {
+            const resp1 = await resp.json()
+            try {
+                const data = {
+                    ...resp1,
+                    message: resp1.detail,
+                    _internal: internalFields
+                } as FetchError
+                return reject(data)
+            } catch {
+                return reject({internalFields: {...internalFields}})
+            }
+        }
+
+        try {
+            const data_1 = await resp.json() as T
+            return resolve(data_1)
+        } catch {
+            return resolve({
+                _internal: internalFields
+            })
+        }
+    }
+
+}
+
 export class NixFetch {
     private config: NixFetchConfig
 
@@ -72,13 +110,13 @@ export class NixFetch {
         if (!(input instanceof URL))
             input = new URL(input.toString() + queryString, this.config.baseURL)
 
-        return fetch(input, {
-            ...init,
-            headers,
+        return new Promise<T>((resolve, reject) => {
+            return fetch(input, {
+                ...init,
+                headers,
+            })
+                .then(processResponse<T>(resolve, resolve))
+                .catch(reject)
         }) as RequestPromise<T, FetchError | E> | Promise<T>
     }
-
-    // fetchRaw = (input: FetchInput, init?: FetchInitParams) => {
-    //     return fetch(input, init)
-    // }
 }
